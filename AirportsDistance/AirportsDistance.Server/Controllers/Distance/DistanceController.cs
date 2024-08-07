@@ -17,8 +17,8 @@ namespace AirportsDistance.Server.Controllers.Distance
 		[HttpGet]
 		public async Task<IActionResult> Get(string iata1 = "AMS", string iata2 = "SVO", CancellationToken cancellationToken = default)
 		{
-			var airportDetails1 = await _airportDetailsService.Get(iata1, cancellationToken);
-			var airportDetails2 = await _airportDetailsService.Get(iata2, cancellationToken);
+			var airportDetails1 = await _airportDetailsService.GetAsync(iata1, cancellationToken);
+			var airportDetails2 = await _airportDetailsService.GetAsync(iata2, cancellationToken);
 
 			var distance = _distanceService.GetDistance(airportDetails1.Location, airportDetails2.Location);
 
