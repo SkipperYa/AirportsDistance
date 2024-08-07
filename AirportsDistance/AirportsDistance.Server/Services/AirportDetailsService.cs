@@ -1,4 +1,5 @@
 ﻿using AirportsDistance.Server.Entities;
+using AirportsDistance.Server.Entities.CustomException;
 using AirportsDistance.Server.Interfaces;
 
 namespace AirportsDistance.Server.Services
@@ -24,10 +25,17 @@ namespace AirportsDistance.Server.Services
 			try
 			{
 				var result = await client.GetFromJsonAsync<AirportDetails>($"{iata}", cancellationToken);
+
+				if (result is null)
+				{
+					throw new BusinessLogicException("Invalid IATA code");
+				}
+
+				return result;
 			}
 			catch (Exception e)
 			{
-
+				throw;
 			}
 		}
 	}
