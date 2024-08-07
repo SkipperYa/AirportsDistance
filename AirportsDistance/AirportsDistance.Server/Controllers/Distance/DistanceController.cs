@@ -14,6 +14,13 @@ namespace AirportsDistance.Server.Controllers.Distance
 			_distanceService = distanceService;
 		}
 
+		/// <summary>
+		/// Get distance between two airports by 2 IATA codes
+		/// </summary>
+		/// <param name="iata1">First IATA code</param>
+		/// <param name="iata2">Second IATA code</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Ok result with double distance</returns>
 		[HttpGet]
 		public async Task<IActionResult> Get(string iata1 = "AMS", string iata2 = "SVO", CancellationToken cancellationToken = default)
 		{
