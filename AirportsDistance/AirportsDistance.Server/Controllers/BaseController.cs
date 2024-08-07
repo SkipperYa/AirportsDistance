@@ -6,7 +6,7 @@ namespace AirportsDistance.Server.Controllers
 	[Route("[controller]")]
 	public abstract class BaseController : ControllerBase
 	{
-		private readonly ILogger<BaseController> _logger;
+		protected readonly ILogger<BaseController> _logger;
 
 		public BaseController(ILogger<BaseController> logger)
 		{
