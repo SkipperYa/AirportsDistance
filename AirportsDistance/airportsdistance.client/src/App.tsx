@@ -8,11 +8,11 @@ function App() {
 		getDistance();
 	}, []);
 
-	const contents = <strong><p>Distance: {distance}</p></strong>;
+	const contents = <strong><p>Distance: {distance} miles</p></strong>;
 
 	return (
 		<div>
-			<h1 id="tableLabel">Airports Distance</h1>
+			<h1>Airports Distance</h1>
 			<p>This component demonstrates fetching data from the server.</p>
 			{contents}
 		</div>
