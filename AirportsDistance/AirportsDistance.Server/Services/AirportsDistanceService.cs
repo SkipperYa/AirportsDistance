@@ -23,7 +23,7 @@ namespace AirportsDistance.Server.Services
 
 			var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
-			return _earthRadius * c * 0.621371;
+			return Math.Round(_earthRadius * c * 0.621371, 2);
 		}
 	}
 }
