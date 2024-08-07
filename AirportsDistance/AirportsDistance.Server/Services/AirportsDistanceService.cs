@@ -10,7 +10,7 @@ namespace AirportsDistance.Server.Services
 
 		private double GetRadiance(double value) => value * Math.PI;
 
-		public double GetDistance([NotNull] Coordinate point1, [NotNull] Coordinate point2, CancellationToken cancellationToken)
+		public double GetDistance([NotNull] Coordinate point1, [NotNull] Coordinate point2)
 		{
 			var f1 = GetRadiance(point1.Latitude);
 			var f2 = GetRadiance(point2.Latitude);
