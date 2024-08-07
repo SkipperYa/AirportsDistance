@@ -1,0 +1,6 @@
+@AirportsDistance.Server_HostAddress = http://localhost:5062
+
+GET {{AirportsDistance.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
