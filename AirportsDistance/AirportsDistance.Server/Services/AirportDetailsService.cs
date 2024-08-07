@@ -18,6 +18,11 @@ namespace AirportsDistance.Server.Services
 		// Add Caching for request
 		public async Task<AirportDetails> Get(string iata, CancellationToken cancellationToken)
 		{
+			if (string.IsNullOrEmpty(iata))
+			{
+				throw new BusinessLogicException("IATA code id required");
+			}
+
 			var client = _clientFactory.CreateClient(ClientName);
 
 			client.BaseAddress = new Uri($"{client.BaseAddress}/{iata}");
@@ -33,7 +38,7 @@ namespace AirportsDistance.Server.Services
 
 				return result;
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw;
 			}
