@@ -9,18 +9,26 @@ namespace AirportsDistance.Server.Services
 		public static string ClientName = "AirportDetails";
 
 		private readonly IHttpClientFactory _clientFactory;
+		private readonly ICacheService<AirportDetails> _cacheService;
 
-		public AirportDetailsService(IHttpClientFactory clientFactory)
+		public AirportDetailsService(IHttpClientFactory clientFactory, ICacheService<AirportDetails> cacheService)
 		{
 			_clientFactory = clientFactory;
+			_cacheService = cacheService;
 		}
 
-		// Add Caching for request
 		public async Task<AirportDetails> GetAsync(string iata, CancellationToken cancellationToken)
 		{
 			if (string.IsNullOrEmpty(iata))
 			{
 				throw new BusinessLogicException("IATA code id required");
+			}
+
+			var airportDetails = _cacheService.Get(iata);
+
+			if (airportDetails is not null)
+			{
+				return airportDetails;
 			}
 
 			var client = _clientFactory.CreateClient(ClientName);
@@ -29,14 +37,16 @@ namespace AirportsDistance.Server.Services
 
 			try
 			{
-				var result = await client.GetFromJsonAsync<AirportDetails>($"{iata}", cancellationToken);
+				airportDetails = await client.GetFromJsonAsync<AirportDetails>($"{iata}", cancellationToken);
 
-				if (result is null)
+				if (airportDetails is null)
 				{
 					throw new BusinessLogicException("Invalid IATA code");
 				}
 
-				return result;
+				_cacheService.Set(iata, airportDetails);
+
+				return airportDetails;
 			}
 			catch (Exception)
 			{
