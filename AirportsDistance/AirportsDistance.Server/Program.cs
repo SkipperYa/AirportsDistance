@@ -1,3 +1,6 @@
+using AirportsDistance.Server.Entities.ControllerFilters;
+using AirportsDistance.Server.Interfaces;
+using AirportsDistance.Server.Services;
 
 namespace AirportsDistance.Server
 {
@@ -9,15 +12,23 @@ namespace AirportsDistance.Server
 
 			// Add services to the container.
 
-			builder.Services.AddControllers();
+			builder.Services.AddControllers(options =>
+			{
+				options.Filters.Add(typeof(BusinessLogicExceptionFilter));
+			});
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
-			var app = builder.Build();
+			builder.Services.AddTransient<IDistanceService, AirportsDistanceService>();
+			builder.Services.AddTransient<IAirportDetailsService, AirportDetailsService>();
 
-			app.UseDefaultFiles();
-			app.UseStaticFiles();
+			builder.Services.AddHttpClient(AirportDetailsService.ClientName, client =>
+			{
+				client.BaseAddress = new Uri("https://places-dev.cteleport.com/airports/");
+			});
+
+			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
@@ -27,9 +38,6 @@ namespace AirportsDistance.Server
 			}
 
 			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
-
 
 			app.MapControllers();
 
