@@ -9,6 +9,7 @@ namespace AirportsDistance.Server.Entities.ControllerFilters
 	{
 		public void OnException(ExceptionContext context)
 		{
+			// Add Logger
 			// throw new NotImplementedException();
 		}
 	}
