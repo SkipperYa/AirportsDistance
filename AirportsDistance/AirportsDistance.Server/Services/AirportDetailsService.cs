@@ -16,7 +16,7 @@ namespace AirportsDistance.Server.Services
 		}
 
 		// Add Caching for request
-		public async Task<AirportDetails> Get(string iata, CancellationToken cancellationToken)
+		public async Task<AirportDetails> GetAsync(string iata, CancellationToken cancellationToken)
 		{
 			if (string.IsNullOrEmpty(iata))
 			{

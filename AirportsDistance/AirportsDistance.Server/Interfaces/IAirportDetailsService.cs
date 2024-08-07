@@ -4,6 +4,6 @@ namespace AirportsDistance.Server.Interfaces
 {
 	public interface IAirportDetailsService
 	{
-		Task<AirportDetails> Get(string iata, CancellationToken cancellationToken);
+		Task<AirportDetails> GetAsync(string iata, CancellationToken cancellationToken);
 	}
 }
