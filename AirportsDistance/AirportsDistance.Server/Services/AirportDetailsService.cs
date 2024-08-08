@@ -19,6 +19,13 @@ namespace AirportsDistance.Server.Services
 			_cacheService = cacheService;
 		}
 
+		/// <summary>
+		/// Get <see cref="AirportDetails">AirportDetails</see> by IATA code
+		/// </summary>
+		/// <param name="iata">IATA code</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns> <see cref="AirportDetails">AirportDetails</see> </returns>
+		/// <exception cref="BusinessLogicException"></exception>
 		public async Task<AirportDetails> GetAsync(string iata, CancellationToken cancellationToken)
 		{
 			var airportDetails = _cacheService.Get(iata);

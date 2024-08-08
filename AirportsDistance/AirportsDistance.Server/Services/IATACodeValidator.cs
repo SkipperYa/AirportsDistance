@@ -6,6 +6,11 @@ namespace AirportsDistance.Server.Services
 {
 	public class IATACodeValidator : IIATACodeValidator
 	{
+		/// <summary>
+		/// Validate IATA code
+		/// </summary>
+		/// <param name="iata">IATA code</param>
+		/// <exception cref="BusinessLogicException"> Exception with validation error </exception>
 		public void Validate(string iata)
 		{
 			if (string.IsNullOrEmpty(iata))

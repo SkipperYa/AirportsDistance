@@ -10,7 +10,13 @@ namespace AirportsDistance.Server.Services
 
 		private double GetRadiance(double value) => value * Math.PI / 180.0;
 
-		public double GetDistance([NotNull] Coordinate point1, [NotNull] Coordinate point2)
+		/// <summary>
+		/// Calculating distance by Haversine formula.
+		/// </summary>
+		/// <param name="point1">Coordinate 1</param>
+		/// <param name="point2">Coordinate 2</param>
+		/// <returns>Distance</returns>
+		public double GetDistance(Coordinate point1, Coordinate point2)
 		{
 			var f1 = GetRadiance(point1.Latitude);
 			var f2 = GetRadiance(point2.Latitude);
