@@ -8,7 +8,7 @@ namespace AirportsDistance.Server.Services
 	{
 		private const double _earthRadius = 6371.0710;
 
-		private double GetRadiance(double value) => value * Math.PI;
+		private double GetRadiance(double value) => value * Math.PI / 180.0;
 
 		public double GetDistance([NotNull] Coordinate point1, [NotNull] Coordinate point2)
 		{

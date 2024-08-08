@@ -66,7 +66,7 @@ namespace AirportsDistance.Server.Test
 			var distanceResponse = data.Data as DistanceResponse;
 			Assert.NotNull(distanceResponse);
 
-			Assert.Equal(7225.74, distanceResponse.Distance);
+			Assert.Equal(4657.84, distanceResponse.Distance);
 		}
 
 		[Fact]
