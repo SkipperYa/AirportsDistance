@@ -17,6 +17,7 @@ interface DistanceResponse {
 
 function App() {
 	const [distance, setDistance] = useState<DistanceResponse>({ point1: undefined, point2: undefined, distance: 0 });
+	const [loading, setLoading] = useState<boolean>(false);
 	const [iata1, setIata1] = useState<string>();
 	const [iata2, setIata2] = useState<string>();
 	const [error, setError] = useState<string>();
@@ -90,7 +91,9 @@ function App() {
 							await getDistance();
 						}}
 					>
-						Get Distance
+						{loading ? <div className="spinner-border" role="status">
+							<span className="sr-only" />
+						</div> : <>Get Distance</>}
 					</button>
 				</div>
 			</div>
@@ -118,8 +121,9 @@ function App() {
 	);
 
 	async function getDistance() {
+		setLoading(true);
 		const fetchResponse = await fetch(`distance?iata1=${iata1}&iata2=${iata2}`);
-		const response = await fetchResponse.json() as Response<number>;
+		const response = await fetchResponse.json() as Response<DistanceResponse>;
 
 		if (!response.success) {
 			setError(response.error ?? 'Something went wrong...');
@@ -127,6 +131,8 @@ function App() {
 			setError(undefined);
 			setDistance(response.data);
 		}
+
+		setLoading(false);
 	}
 }
 
