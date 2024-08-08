@@ -1,6 +1,5 @@
 ﻿using AirportsDistance.Server.Entities.Response;
 using AirportsDistance.Server.Interfaces;
-using AirportsDistance.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirportsDistance.Server.Controllers.Distance
@@ -41,7 +40,7 @@ namespace AirportsDistance.Server.Controllers.Distance
 
 			var distance = _distanceService.GetDistance(airportDetails1.Location, airportDetails2.Location);
 
-			var response = new Response(new 
+			var response = new Response(new DistanceResponse()
 			{
 				Point1 = airportDetails1.Name,
 				Point2 = airportDetails2.Name,
