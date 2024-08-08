@@ -2,6 +2,7 @@ using AirportsDistance.Server.Entities;
 using AirportsDistance.Server.Entities.ControllerFilters;
 using AirportsDistance.Server.Interfaces;
 using AirportsDistance.Server.Services;
+using Microsoft.AspNetCore.Http.Timeouts;
 
 namespace AirportsDistance.Server
 {
@@ -16,6 +17,14 @@ namespace AirportsDistance.Server
 			builder.Services.AddControllers(options =>
 			{
 				options.Filters.Add(typeof(BusinessLogicExceptionFilter));
+			});
+
+			builder.Services.AddRequestTimeouts(options =>
+			{
+				options.AddPolicy("DefaultTimeout10s", new RequestTimeoutPolicy()
+				{
+					Timeout = TimeSpan.FromMilliseconds(10000),
+				});
 			});
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
