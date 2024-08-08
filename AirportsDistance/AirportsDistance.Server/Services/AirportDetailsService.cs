@@ -1,6 +1,8 @@
 ﻿using AirportsDistance.Server.Entities;
 using AirportsDistance.Server.Entities.CustomException;
 using AirportsDistance.Server.Interfaces;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace AirportsDistance.Server.Services
 {
@@ -47,11 +49,37 @@ namespace AirportsDistance.Server.Services
 
 			try
 			{
-				airportDetails = await client.GetFromJsonAsync<AirportDetails>($"{iata}", cancellationToken);
+				var response = await client.GetAsync($"{iata}", cancellationToken);
 
-				if (airportDetails is null)
+				if (response.IsSuccessStatusCode)
 				{
-					throw new BusinessLogicException("Invalid IATA code");
+					airportDetails = await response.Content.ReadFromJsonAsync<AirportDetails>(cancellationToken: cancellationToken);
+				}
+				else
+				{
+					switch (response.StatusCode)
+					{
+						case HttpStatusCode.NotFound:
+						{
+							throw new BusinessLogicException("Invalid IATA code");
+						}
+						case HttpStatusCode.BadRequest:
+						{
+							throw new BusinessLogicException("Invalid IATA code");
+						}
+						case HttpStatusCode.ServiceUnavailable:
+						{
+							throw new BusinessLogicException("Remote service is Unavailable. Please try later");
+						}
+						case HttpStatusCode.InternalServerError:
+						{
+							throw new BusinessLogicException("Internal server error in remote service. Please try later");
+						}
+						default:
+						{
+							throw new BusinessLogicException("Something went wrong. Please try later");
+						}
+					}
 				}
 
 				_cacheService.Set(iata, airportDetails);
