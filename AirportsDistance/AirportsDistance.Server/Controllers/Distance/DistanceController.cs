@@ -41,7 +41,12 @@ namespace AirportsDistance.Server.Controllers.Distance
 
 			var distance = _distanceService.GetDistance(airportDetails1.Location, airportDetails2.Location);
 
-			var response = new Response(distance);
+			var response = new Response(new 
+			{
+				Point1 = airportDetails1.Name,
+				Point2 = airportDetails2.Name,
+				Distance = distance
+			});
 
 			return Ok(response);
 		}
