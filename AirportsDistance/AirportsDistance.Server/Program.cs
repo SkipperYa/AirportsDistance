@@ -3,6 +3,8 @@ using AirportsDistance.Server.Entities.ControllerFilters;
 using AirportsDistance.Server.Interfaces;
 using AirportsDistance.Server.Services;
 using Microsoft.AspNetCore.Http.Timeouts;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 namespace AirportsDistance.Server
 {
@@ -17,9 +19,21 @@ namespace AirportsDistance.Server
 
 			// Add services to the container.
 
+			builder.Services.AddResponseCaching();
+			builder.Services.AddResponseCompression(options =>
+			{
+				options.EnableForHttps = true;
+				options.Providers.Add<BrotliCompressionProvider>();
+			});
+
 			builder.Services.AddControllers(options =>
 			{
 				options.Filters.Add(typeof(BusinessLogicExceptionFilter));
+			});
+
+			builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+			{
+				options.Level = CompressionLevel.Optimal;
 			});
 
 			builder.Services.AddRequestTimeouts(options =>
@@ -58,6 +72,8 @@ namespace AirportsDistance.Server
 			app.UseHttpsRedirection();
 
 			app.MapControllers();
+
+			app.UseResponseCompression();
 
 			app.MapFallbackToFile("/index.html");
 

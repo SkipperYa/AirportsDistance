@@ -30,6 +30,7 @@ namespace AirportsDistance.Server.Controllers.Distance
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Ok result with Response</returns>
 		[HttpGet]
+		[ResponseCache(Duration = 300)]
 		public async Task<IActionResult> Get(string iata1, string iata2, CancellationToken cancellationToken = default)
 		{
 			_IATACodeValidator.Validate(iata1);
