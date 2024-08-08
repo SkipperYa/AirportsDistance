@@ -1,14 +1,15 @@
 ﻿using AirportsDistance.Server.Entities;
 using AirportsDistance.Server.Interfaces;
-using System.Diagnostics.CodeAnalysis;
 
 namespace AirportsDistance.Server.Services
 {
 	public class AirportsDistanceService : IDistanceService
 	{
 		private const double _earthRadius = 6371.0710;
+		private const double _coefficient = 0.621371;
 
 		private double GetRadiance(double value) => value * Math.PI / 180.0;
+		private double KilometerToMiles(double kilometers) => Math.Round(kilometers * _coefficient, 2);
 
 		/// <summary>
 		/// Calculating distance by Haversine formula.
@@ -18,18 +19,18 @@ namespace AirportsDistance.Server.Services
 		/// <returns>Distance</returns>
 		public double GetDistance(Coordinate point1, Coordinate point2)
 		{
-			var f1 = GetRadiance(point1.Latitude);
-			var f2 = GetRadiance(point2.Latitude);
+			var radianLatitude1 = GetRadiance(point1.Latitude);
+			var radianLatitude2 = GetRadiance(point2.Latitude);
 
-			var deltaF = GetRadiance(point2.Latitude - point1.Latitude);
-			var deltaL = GetRadiance(point2.Longitude - point1.Longitude);
+			var deltaRadianLatitude = GetRadiance(point2.Latitude - point1.Latitude);
+			var deltaRadianLongitude = GetRadiance(point2.Longitude - point1.Longitude);
 
-			var a = Math.Sin(deltaF / 2.0) * Math.Sin(deltaF / 2.0)
-				+ Math.Cos(f1) * Math.Cos(f2) * Math.Sin(deltaL / 2) * Math.Sin(deltaL / 2);
+			var angel = Math.Sin(deltaRadianLatitude / 2.0) * Math.Sin(deltaRadianLatitude / 2.0)
+				+ Math.Cos(radianLatitude1) * Math.Cos(radianLatitude2) * Math.Sin(deltaRadianLongitude / 2.0) * Math.Sin(deltaRadianLongitude / 2.0);
 
-			var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+			var coefficient = 2.0 * Math.Atan2(Math.Sqrt(angel), Math.Sqrt(1.0 - angel));
 
-			return Math.Round(_earthRadius * c * 0.621371, 2);
+			return KilometerToMiles(_earthRadius * coefficient);
 		}
 	}
 }
