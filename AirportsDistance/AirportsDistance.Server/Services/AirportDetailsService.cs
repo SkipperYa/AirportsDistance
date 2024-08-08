@@ -21,21 +21,6 @@ namespace AirportsDistance.Server.Services
 
 		public async Task<AirportDetails> GetAsync(string iata, CancellationToken cancellationToken)
 		{
-			if (string.IsNullOrEmpty(iata))
-			{
-				throw new BusinessLogicException("IATA code id required");
-			}
-
-			if (iata.Length != 3)
-			{
-				throw new BusinessLogicException("IATA code must contains only 3-letter");
-			}
-
-			if (!Regex.IsMatch(iata, @"^[a-zA-Z]+$"))
-			{
-				throw new BusinessLogicException("IATA code must contains only letters");
-			}
-
 			var airportDetails = _cacheService.Get(iata);
 
 			if (airportDetails is not null)

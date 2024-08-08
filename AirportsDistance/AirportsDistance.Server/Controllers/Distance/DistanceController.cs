@@ -1,5 +1,6 @@
 ﻿using AirportsDistance.Server.Entities.Response;
 using AirportsDistance.Server.Interfaces;
+using AirportsDistance.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirportsDistance.Server.Controllers.Distance
@@ -8,11 +9,18 @@ namespace AirportsDistance.Server.Controllers.Distance
 	{
 		private readonly IAirportDetailsService _airportDetailsService;
 		private readonly IDistanceService _distanceService;
+		private readonly IIATACodeValidator _IATACodeValidator;
 
-		public DistanceController(ILogger<BaseController> logger, IAirportDetailsService airportDetailsService, IDistanceService distanceService) : base(logger)
+		public DistanceController(
+			ILogger<BaseController> logger,
+			IAirportDetailsService airportDetailsService,
+			IDistanceService distanceService,
+			IIATACodeValidator IATACodeValidator
+		) : base(logger)
 		{
 			_airportDetailsService = airportDetailsService;
 			_distanceService = distanceService;
+			_IATACodeValidator = IATACodeValidator;
 		}
 
 		/// <summary>
@@ -21,10 +29,13 @@ namespace AirportsDistance.Server.Controllers.Distance
 		/// <param name="iata1">First IATA code</param>
 		/// <param name="iata2">Second IATA code</param>
 		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Ok result with double distance</returns>
+		/// <returns>Ok result with Response</returns>
 		[HttpGet]
 		public async Task<IActionResult> Get(string iata1, string iata2, CancellationToken cancellationToken = default)
 		{
+			_IATACodeValidator.Validate(iata1);
+			_IATACodeValidator.Validate(iata2);
+
 			var airportDetails1 = await _airportDetailsService.GetAsync(iata1, cancellationToken);
 			var airportDetails2 = await _airportDetailsService.GetAsync(iata2, cancellationToken);
 
