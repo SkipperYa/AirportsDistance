@@ -24,6 +24,16 @@ namespace AirportsDistance.Server.Services
 				throw new BusinessLogicException("IATA code id required");
 			}
 
+			if (iata.Length != 3)
+			{
+				throw new BusinessLogicException("IATA code must contains only 3-letter");
+			}
+
+			if (!Regex.IsMatch(iata, @"^[a-zA-Z]+$"))
+			{
+				throw new BusinessLogicException("IATA code must contains only letters");
+			}
+
 			var airportDetails = _cacheService.Get(iata);
 
 			if (airportDetails is not null)
