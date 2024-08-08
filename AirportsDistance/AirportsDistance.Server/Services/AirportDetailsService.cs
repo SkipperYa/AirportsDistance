@@ -1,7 +1,6 @@
 ﻿using AirportsDistance.Server.Entities;
 using AirportsDistance.Server.Entities.CustomException;
 using AirportsDistance.Server.Interfaces;
-using System.Net;
 
 namespace AirportsDistance.Server.Services
 {
@@ -9,13 +8,19 @@ namespace AirportsDistance.Server.Services
 	{
 		public static string ClientName = "AirportDetails";
 
-		private readonly IHttpClientFactory _clientFactory;
-		private readonly ICacheService<AirportDetails> _cacheService;
+		private readonly IHttpClientService _httpClientService;
+		private readonly ICacheService<AirportDetails> _cacheService; 
+		private readonly IHttpResponseHandler<AirportDetails> _httpResponseHandler;
 
-		public AirportDetailsService(IHttpClientFactory clientFactory, ICacheService<AirportDetails> cacheService)
+		public AirportDetailsService(
+			IHttpClientService httpClientService,
+			ICacheService<AirportDetails> cacheService,
+			IHttpResponseHandler<AirportDetails> httpResponseHandler
+		)
 		{
-			_clientFactory = clientFactory;
+			_httpClientService = httpClientService;
 			_cacheService = cacheService;
+			_httpResponseHandler = httpResponseHandler;
 		}
 
 		/// <summary>
@@ -34,44 +39,11 @@ namespace AirportsDistance.Server.Services
 				return airportDetails;
 			}
 
-			var client = _clientFactory.CreateClient(ClientName);
-
-			client.BaseAddress = new Uri($"{client.BaseAddress}{iata.Trim().ToUpperInvariant()}");
-
 			try
 			{
-				var response = await client.GetAsync($"{iata}", cancellationToken);
+				var response = await _httpClientService.GetAsync(ClientName, iata.Trim().ToUpperInvariant(), cancellationToken);
 
-				if (response.IsSuccessStatusCode)
-				{
-					airportDetails = await response.Content.ReadFromJsonAsync<AirportDetails>(cancellationToken: cancellationToken);
-				}
-				else
-				{
-					switch (response.StatusCode)
-					{
-						case HttpStatusCode.NotFound:
-						{
-							throw new BusinessLogicException("Invalid IATA code");
-						}
-						case HttpStatusCode.BadRequest:
-						{
-							throw new BusinessLogicException("Invalid IATA code");
-						}
-						case HttpStatusCode.ServiceUnavailable:
-						{
-							throw new BusinessLogicException("Remote service is Unavailable. Please try later");
-						}
-						case HttpStatusCode.InternalServerError:
-						{
-							throw new BusinessLogicException("Internal server error in remote service. Please try later");
-						}
-						default:
-						{
-							throw new BusinessLogicException("Something went wrong. Please try later");
-						}
-					}
-				}
+				airportDetails = await _httpResponseHandler.HandleResponse(response, cancellationToken);
 
 				_cacheService.Set(iata, airportDetails);
 

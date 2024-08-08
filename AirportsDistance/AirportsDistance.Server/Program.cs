@@ -49,6 +49,8 @@ namespace AirportsDistance.Server
 			builder.Services.AddSwaggerGen();
 
 			builder.Services.AddTransient<IDistanceService, AirportsDistanceService>();
+			builder.Services.AddTransient<IHttpClientService, HttpClientService>();
+			builder.Services.AddTransient<IHttpResponseHandler<AirportDetails>, HttpResponseHandler<AirportDetails>>();
 			builder.Services.AddTransient<IAirportDetailsService, AirportDetailsService>();
 			builder.Services.AddSingleton<ICacheService<AirportDetails>, AirportDetailsCacheService>();
 			builder.Services.AddSingleton<IIATACodeValidator, IATACodeValidator>();
