@@ -1,4 +1,5 @@
-﻿using AirportsDistance.Server.Interfaces;
+﻿using AirportsDistance.Server.Entities.Response;
+using AirportsDistance.Server.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirportsDistance.Server.Controllers.Distance
@@ -22,14 +23,16 @@ namespace AirportsDistance.Server.Controllers.Distance
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Ok result with double distance</returns>
 		[HttpGet]
-		public async Task<IActionResult> Get(string iata1 = "AMS", string iata2 = "SVO", CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Get(string iata1, string iata2, CancellationToken cancellationToken = default)
 		{
 			var airportDetails1 = await _airportDetailsService.GetAsync(iata1, cancellationToken);
 			var airportDetails2 = await _airportDetailsService.GetAsync(iata2, cancellationToken);
 
 			var distance = _distanceService.GetDistance(airportDetails1.Location, airportDetails2.Location);
 
-			return Ok(distance);
+			var response = new Response(distance);
+
+			return Ok(response);
 		}
 	}
 }
