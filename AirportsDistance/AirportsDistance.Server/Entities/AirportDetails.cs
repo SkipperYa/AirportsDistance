@@ -39,5 +39,10 @@ namespace AirportsDistance.Server.Entities
 
 		[JsonPropertyName("type")]
 		public string Type { get; set; }
+
+		public AirportDetails()
+		{
+			Location = new Coordinate();
+		}
 	}
 }
