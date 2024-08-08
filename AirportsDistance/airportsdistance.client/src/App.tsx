@@ -63,7 +63,7 @@ function App() {
 							type="text"
 							className="form-control"
 							onChange={(e) => {
-								setIata1(e.target.value);
+								setIata1(e.target.value.toString().toUpperCase());
 							}}
 						/>
 					</div>
@@ -122,11 +122,12 @@ function App() {
 
 	async function getDistance() {
 		setLoading(true);
-		const fetchResponse = await fetch(`distance?iata1=${iata1}&iata2=${iata2}`);
+		const fetchResponse = await fetch(`distance?iata1=${iata1?.toString().toUpperCase()}&iata2=${iata2?.toString().toUpperCase() }`);
 		const response = await fetchResponse.json() as Response<DistanceResponse>;
 
 		if (!response.success) {
 			setError(response.error ?? 'Something went wrong...');
+			setDistance({ point1: undefined, point2: undefined, distance: 0 });
 		} else {
 			setError(undefined);
 			setDistance(response.data);
