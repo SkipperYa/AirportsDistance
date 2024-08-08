@@ -1,3 +1,4 @@
+using AirportsDistance.Server.Entities;
 using AirportsDistance.Server.Entities.ControllerFilters;
 using AirportsDistance.Server.Interfaces;
 using AirportsDistance.Server.Services;
@@ -23,7 +24,7 @@ namespace AirportsDistance.Server
 
 			builder.Services.AddTransient<IDistanceService, AirportsDistanceService>();
 			builder.Services.AddTransient<IAirportDetailsService, AirportDetailsService>();
-			builder.Services.AddSingleton(typeof(ICacheService<>), typeof(AirportDetailsCacheService));
+			builder.Services.AddSingleton<ICacheService<AirportDetails>, AirportDetailsCacheService>();
 
 			builder.Services.AddMemoryCache();
 
