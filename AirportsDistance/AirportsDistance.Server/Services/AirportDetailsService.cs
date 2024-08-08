@@ -37,7 +37,7 @@ namespace AirportsDistance.Server.Services
 
 			var client = _clientFactory.CreateClient(ClientName);
 
-			client.BaseAddress = new Uri($"{client.BaseAddress}{iata}");
+			client.BaseAddress = new Uri($"{client.BaseAddress}{iata.Trim().ToUpperInvariant()}");
 
 			try
 			{
