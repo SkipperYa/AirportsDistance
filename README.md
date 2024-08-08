@@ -13,3 +13,13 @@ For example:
 * BNA for Nashville, Tennessee (whose airport's original name was Berry Field)
 * APC for Napa, California
 * ILM for Wilmington, North Carolina
+
+# Launch
+Depedency: .Net8, node.js 20v+
+
+``` 
+npm install
+```
+Follow: [https://localhost:7032](https://localhost:5173/)
+
+For swagger: https://localhost:7032/swagger/index.html
