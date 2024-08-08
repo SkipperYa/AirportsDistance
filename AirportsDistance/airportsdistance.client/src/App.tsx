@@ -11,17 +11,17 @@ interface Response<T> {
 
 function App() {
 	const [distance, setDistance] = useState<number>(0);
-	const [iata1, setIata1] = useState<string>('AMS');
-	const [iata2, setIata2] = useState<string>('SVO');
+	const [iata1, setIata1] = useState<string>();
+	const [iata2, setIata2] = useState<string>();
 	const [error, setError] = useState<string>();
 
-	const contents = <strong><p>Distance: {distance} miles</p></strong>;
+	const contents = <strong><h4>Distance: {distance} miles</h4></strong>;
 
 	return (
 		<div className="conteiner">
 			<h1>Airports Distance</h1>
 			<hr />
-			<p>REST service to measure distance in miles between two airports.</p>
+			<h6>REST service to measure distance in miles between two airports.</h6>
 			<br />
 			<div className="row">
 				<div className="col-sm">
@@ -56,6 +56,7 @@ function App() {
 					<button
 						className="btn btn-dark"
 						type="button"
+						disabled={!iata1 || !iata2}
 						onClick={async () => {
 							await getDistance();
 						}}
@@ -66,10 +67,12 @@ function App() {
 			</div>
 			<br />
 			<div className="text-center">
-				{contents}
+				<p>{contents}</p>
 			</div>
+			<br />
 			{error && <div className="text-danger">
-				{error}
+				<hr />
+				<h4>Error: {error}</h4>
 			</div>}
 		</div>
 	);
@@ -81,6 +84,7 @@ function App() {
 		if (!response.success) {
 			setError(response.error ?? 'Something went wrong...');
 		} else {
+			setError(undefined);
 			setDistance(response.data);
 		}
 	}
