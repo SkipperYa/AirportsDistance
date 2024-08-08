@@ -12,6 +12,7 @@ function App() {
 	const [distance, setDistance] = useState<number>(0);
 	const [iata1, setIata1] = useState<string>('AMS');
 	const [iata2, setIata2] = useState<string>('SVO');
+	const [error, setError] = useState<string>();
 
 	const contents = <strong><p>Distance: {distance} miles</p></strong>;
 
@@ -37,7 +38,12 @@ function App() {
 	async function getDistance() {
 		const fetchResponse = await fetch(`distance?iata1=${iata1}&iata2=${iata2}`);
 		const response = await fetchResponse.json() as Response<number>;
-		setDistance(response.data);
+
+		if (!response.success) {
+			setError(response.error ?? 'Something went wrong...');
+		} else {
+			setDistance(response.data);
+		}
 	}
 }
 
