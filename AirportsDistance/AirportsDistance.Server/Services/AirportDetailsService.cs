@@ -39,13 +39,32 @@ namespace AirportsDistance.Server.Services
 				return airportDetails;
 			}
 
-			var response = await _httpClientService.GetAsync(ClientName, iata.Trim().ToUpperInvariant(), cancellationToken);
+			try
+			{
+				var response = await _httpClientService.GetAsync(ClientName, iata.Trim().ToUpperInvariant(), cancellationToken);
 
-			airportDetails = await _httpResponseHandler.HandleResponseAsync(response, cancellationToken);
+				airportDetails = await _httpResponseHandler.HandleResponseAsync(response, cancellationToken);
 
-			_cacheService.Set(iata, airportDetails);
+				_cacheService.Set(iata, airportDetails);
 
-			return airportDetails;
+				return airportDetails;
+			}
+			catch (InvalidRequestException ire)
+			{
+				throw new InvalidRequestException("Invalid IATA code.", ire);
+			}
+			catch (RemoteServiceInternalException rsie)
+			{
+				throw new BusinessLogicException("Remote service is Unavailable.Please try later.", rsie);
+			}
+			catch (UnknownBusinessLogicException uble)
+			{
+				throw new BusinessLogicException("Something went wrong. Please try later.", uble);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 	}
 }

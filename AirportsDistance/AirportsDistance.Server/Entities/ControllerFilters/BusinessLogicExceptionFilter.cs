@@ -21,26 +21,35 @@ namespace AirportsDistance.Server.Entities.ControllerFilters
 		public void OnException(ExceptionContext context)
 		{
 			string actionName = context.ActionDescriptor.DisplayName;
-			string exceptionStack = context.Exception.StackTrace;
-			string exceptionMessage = context.Exception.Message;
+
+			var exception = context.Exception;
 
 			var stringBuilder = new StringBuilder();
 
 			stringBuilder.Append($"ActionName: {actionName} \n");
-			stringBuilder.Append($"ExceptionStack: {exceptionStack} \n");
-			stringBuilder.Append($"ExceptionMessage: {exceptionMessage} \n");
+
+			stringBuilder.Append($"ExceptionStackTrace: {exception.StackTrace} \n");
+			stringBuilder.Append($"ExceptionMessage: {exception.Message} \n");
+			stringBuilder.Append('\n');
+
+			if (exception.InnerException != null)
+			{
+				stringBuilder.Append($"ExceptionStackTrace: {exception.InnerException.StackTrace} \n");
+				stringBuilder.Append($"ExceptionMessage: {exception.InnerException.Message} \n");
+				stringBuilder.Append('\n');
+			}
 
 			var error = stringBuilder.ToString();
 
 			// Send message to client if it BusinessLogicException
-			if (context.Exception is BusinessLogicException logicException)
+			if (exception is BusinessLogicException logicException)
 			{
 				_logger.LogError(error);
 
 				context.Result = new JsonResult(new Response.Response(logicException.Message));
 			}
 			// If it is TaskCanceledException set message Service Unavailable.
-			else if (context.Exception is TaskCanceledException)
+			else if (exception is TaskCanceledException)
 			{
 				_logger.LogWarning(error);
 

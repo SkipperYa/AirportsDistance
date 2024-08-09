@@ -13,23 +13,23 @@ namespace AirportsDistance.Server.Services
 			{
 				case HttpStatusCode.NotFound:
 				{
-					throw new BusinessLogicException("Invalid IATA code");
+					throw new InvalidRequestException(response.ReasonPhrase);
 				}
 				case HttpStatusCode.BadRequest:
 				{
-					throw new BusinessLogicException("Invalid IATA code");
+					throw new InvalidRequestException(response.ReasonPhrase);
 				}
 				case HttpStatusCode.ServiceUnavailable:
 				{
-					throw new BusinessLogicException("Remote service is Unavailable. Please try later");
+					throw new RemoteServiceInternalException(response.ReasonPhrase);
 				}
 				case HttpStatusCode.InternalServerError:
 				{
-					throw new BusinessLogicException("Internal server error in remote service. Please try later");
+					throw new RemoteServiceInternalException(response.ReasonPhrase);
 				}
 				default:
 				{
-					throw new BusinessLogicException("Something went wrong. Please try later");
+					throw new UnknownBusinessLogicException(response.ReasonPhrase);
 				}
 			}
 		}

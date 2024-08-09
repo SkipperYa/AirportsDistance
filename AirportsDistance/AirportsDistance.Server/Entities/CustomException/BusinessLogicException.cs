@@ -9,5 +9,10 @@
 		{
 
 		}
+
+		public BusinessLogicException(string message, Exception inner) : base(message, inner)
+		{
+
+		}
 	}
 }
