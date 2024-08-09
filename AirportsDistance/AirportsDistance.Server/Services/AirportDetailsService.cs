@@ -39,20 +39,13 @@ namespace AirportsDistance.Server.Services
 				return airportDetails;
 			}
 
-			try
-			{
-				var response = await _httpClientService.GetAsync(ClientName, iata.Trim().ToUpperInvariant(), cancellationToken);
+			var response = await _httpClientService.GetAsync(ClientName, iata.Trim().ToUpperInvariant(), cancellationToken);
 
-				airportDetails = await _httpResponseHandler.HandleResponse(response, cancellationToken);
+			airportDetails = await _httpResponseHandler.HandleResponseAsync(response, cancellationToken);
 
-				_cacheService.Set(iata, airportDetails);
+			_cacheService.Set(iata, airportDetails);
 
-				return airportDetails;
-			}
-			catch (Exception)
-			{
-				throw;
-			}
+			return airportDetails;
 		}
 	}
 }
